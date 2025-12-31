@@ -53,3 +53,4 @@ d.print();
 - **Neural Network Layers**
 - **Optimizers**
 - **CUDA (maybe later!)**
+---
