@@ -5,10 +5,10 @@ using namespace arma;
 template <typename T>
 class Tensor{
   private:
-  Mat<T> x_tensor;
+  vector<T> storage;
   vector<int> shape;
   vector<int> strides;
-  Row<T> data;
+  
   void compute_strides() {
         strides.resize(shape.size());
         int stride = 1;
@@ -18,40 +18,36 @@ class Tensor{
         }
     }
   public:
-  Tensor(const Mat<T> &X){
-    x_tensor=X;
-    shape={(int)X.n_rows,(int)X.n_cols};
-    int size=X.n_rows*X.n_cols;
-    data.set_size(size);
-    int k=0;
-    for(int i=0;i<X.n_rows;i++){
-      for(int j=0;j<X.n_cols;j++){
-        data[k++]=X(i,j);
-      }
+   Mat<T> view() const{
+       return Mat<T>(storage.data(), shape[1], shape[0], false, true).t();
     }
-    compute_strides();
-  }
+    Tensor(const Mat<T> &X){
+    shape={(int)X.n_rows,(int)X.n_cols};
+    storage.resize(X.n_elem);
+    int k = 0;
+    for(int i=0; i < (int)X.n_rows; i++) {
+     for(int j=0; j < (int)X.n_cols; j++) {
+        storage[k++] = X(i, j);
+            }
+        }
+      compute_strides();
+    }
+    
+  
   Tensor(const vector<int>& s) {
     shape = s;
     int total = 1;
     for (int dim : shape) total *= dim;
-    data.set_size(total);
-    data.zeros();
-    x_tensor.zeros(s[0], s[1]);
+    storage.assign(total,0);
     compute_strides();
   }
-  const T& operator()(const vector<int> &id){
-    if (id.size() != shape.size()) {
-        throw runtime_error("Dimension mismatch in indexing");
+  
+    const T& operator()(const vector<int> &id){
+    int k = 0;
+    for(size_t i = 0; i < id.size(); i++) {
+        k += strides[i] * id[i];
     }
-    int k=0;
-    for(size_t i=0;i<id.size();i++){
-      if (id[i] < 0 || id[i] >= shape[i]) {
-            throw runtime_error("Index out of bounds at dimension " + to_string(i));
-        }
-      k+=strides[i]*id[i];
-    }
-    return data[k];
+    return storage[k];
   }
 
   Tensor operator+(const Tensor &other){
@@ -59,14 +55,8 @@ class Tensor{
       throw runtime_error("Shape mismatch");
       // cout<<"Shape Does Not Match"<<endl;
       }
-    Tensor out(shape);
-    out.x_tensor=other.x_tensor+x_tensor;
-    out.data=data+other.data;
-    return out;
-  }
-
-  Tensor operator+(const T &scalar) {
-    return Tensor(x_tensor + scalar); 
+    Mat<T> result = this->view() + other.view();
+    return Tensor(result);
   }
 
   Tensor operator-(const Tensor &other){
@@ -74,9 +64,8 @@ class Tensor{
       throw runtime_error("Shape mismatch");
       // cout<<"Shape Does Not Match"<<endl;
       }
-    Tensor out(shape);
-    out.x_tensor=x_tensor-other.x_tensor;
-    out.data=data-other.data;
+    Mat<T> result = this->view() - other.view();
+    return Tensor(result);
     return out;
   }
 
@@ -85,8 +74,8 @@ class Tensor{
       throw runtime_error("Shape mismatch");
       // cout<<"Shape Does Not Match"<<endl;
       }
-    Tensor out(shape);
-    out.x_tensor=x_tensor/other.x_tensor;
+    Mat<T> result = this->view() / other.view();
+    return Tensor(result);
     return out;
   }
 
@@ -95,68 +84,61 @@ class Tensor{
       throw runtime_error("Shape mismatch");
       // cout<<"Shape Does Not Match"<<endl;
       }
-    Tensor out(shape);
-    out.x_tensor = x_tensor % other.x_tensor; 
-    out.data = data % other.data;
-    return out;   
+    Mat<T> result = this->view() % other.view();
+    return Tensor(result);
+    return out;
   }
   
   Tensor dot(const Tensor &other){
-     if (shape.size() != 2 || other.shape.size() != 2)
+    if (shape.size() != 2 || other.shape.size() != 2)
       throw runtime_error("Dot only for 2-D tensors");
 
     if(shape[1]!=other.shape[0]) {
       throw runtime_error("Shape mismatch: shape[1]!=other.shape[0]");
       // cout<<"Shape Does Not Match"<<endl;
       }
-    Mat<T> result=x_tensor*other.x_tensor;
+      Mat<T> result=this->view() * other.view();
     return Tensor(result);
   }
 
   Tensor reshape(const vector<int> &s){
     size_t dim=1;
     for(int k:s) dim*=k;
-    if(dim!=data.size()) throw runtime_error("Shape mismatch");
-    Mat<T> res=reshape(x_tensor,s[0],s[1]);
-    return Tensor(res);
+    if(dim!=storage.size()) throw runtime_error("Shape mismatch");
+    Tensor<T> new_t=*this;
+    new_t.shape=s;
+    new_t.compute_strides();
+      
+    return new_t);
   }
 
   Tensor transpose(){
-    return Tensor(x_tensor.t());
+      Tensor new_t=*this;
+      swap(new_t.shape[0],new_t.shape[1]);
+      swap(new_t.strides[0],new_t.strides[1]);
+    return new_t;
   }
 
   Tensor sum(int dim){
-   if(dim!=0 && dim!=1){
-    throw runtime_error("Wrong axis argument: axis=[0,1]");
-   }
-  Mat<T> result=sum(x_tensor, dim);  
-  return Tensor(result);
+   return Tensor(arma::sum(this->view(),dim);
   }
   
   Tensor mean(int dim){
-   if(dim!=0 && dim!=1){
-    throw runtime_error("Wrong axis argument: axis=[0,1]");
-   }
-  Mat<T> result=mean(x_tensor, dim);   
-  return Tensor(result);
+   return Tensor(arma::mean(this->view(),dim);
   }
 
   Tensor MAX(int dim){
-   if(dim!=0 && dim!=1){
-    throw runtime_error("Wrong axis argument: axis=[0,1]");
-   } 
-  Mat<T> result=max(x_tensor, dim);  
-  return Tensor(result);
+   return Tensor(arma::max(this->view(),dim);
   }
   void print() const {
-        x_tensor.print();
+        this->view().print();
   }
 
   Tensor add_vector(const Tensor& vec) {
     if (vec.shape[1] != this->shape[1]) 
         throw runtime_error("Width mismatch for broadcasting");
-    Mat<T> result = x_tensor;
-    result.each_row() += vec.x_tensor.row(0); 
+    Mat<T> result = this->view();
+    result.each_row() += vec.x_tensor.row(0);
     
     return Tensor(result);
 }
