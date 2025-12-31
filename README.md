@@ -7,7 +7,7 @@ This repository is part of my project to implement **Deep Learning from scratch 
 ## Phase 1: Tensor Abstraction
 In this phase, I implemented a basic `Tensor` class that supports:
 
-- storing data in a **1-D contiguous `std::vector`**
+- storing data in a **1-D contiguous `vector`**
 - keeping track of **shape and strides**
 - safe **multi-dimensional indexing**
 - math operations like:
