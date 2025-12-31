@@ -1,5 +1,5 @@
 ---
 triple:          'arm64-apple-darwin'
-binary-path:     '/Users/mrinalchaturvedi/Desktop/MOONNEW/Projects/FromScratch/C++/NN'
+binary-path:     '/Users/mrinalchaturvedi/Desktop/MOONNEW/Projects/FromScratch/NN_C++/NN'
 relocations:     []
 ...
