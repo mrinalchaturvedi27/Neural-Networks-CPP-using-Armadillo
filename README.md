@@ -1,6 +1,6 @@
 # NeuroEngine-CPP — Neural Networks in C++ (Phase 1)
 
-This repository is part of my journey to implement **Deep Learning from scratch in C++**, using **Armadillo** as the matrix computation backend.
+This repository is part of my project to implement **Deep Learning from scratch in C++**, using **Armadillo** as the matrix computation backend.
 
 ### 🎯 Goal of Phase 1
 Build a simple **Tensor abstraction layer** that allows me to:
