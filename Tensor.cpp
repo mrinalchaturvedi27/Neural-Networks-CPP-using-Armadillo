@@ -102,14 +102,13 @@ class Tensor{
   }
 
   Tensor reshape(const vector<int> &s){
-    size_t dim=1;
-    for(int k:s) dim*=k;
-    if(dim!=storage.size()) throw runtime_error("Shape mismatch");
-    Tensor<T> new_t=*this;
-    new_t.shape=s;
+    size_t total = 1;
+    for(int dim : s) total *= dim;
+    if(total != storage.size()) throw runtime_error("Reshape size mismatch");
+    Tensor<T> new_t(*this);
+    new_t.shape = s;
     new_t.compute_strides();
-      
-    return new_t);
+    return new_t;
   }
 
   Tensor transpose(){
@@ -120,28 +119,31 @@ class Tensor{
   }
 
   Tensor sum(int dim){
-   return Tensor(arma::sum(this->view(),dim);
-  }
-  
-  Tensor mean(int dim){
-   return Tensor(arma::mean(this->view(),dim);
-  }
-
-  Tensor MAX(int dim){
-   return Tensor(arma::max(this->view(),dim);
-  }
-  void print() const {
-        this->view().print();
-  }
-
-  Tensor add_vector(const Tensor& vec) {
-    if (vec.shape[1] != this->shape[1]) 
-        throw runtime_error("Width mismatch for broadcasting");
-    Mat<T> result = this->view();
-    result.each_row() += vec.x_tensor.row(0);
-    
-    return Tensor(result);
+    if(dim != 0 && dim != 1) throw runtime_error("Axis must be 0 or 1");
+    return Tensor<T>(arma::sum(this->view(), dim));
 }
+
+Tensor mean(int dim){
+    if(dim != 0 && dim != 1) throw runtime_error("Axis must be 0 or 1");
+    return Tensor<T>(arma::mean(this->view(), dim));
+}
+
+Tensor MAX(int dim){
+    if(dim != 0 && dim != 1) throw runtime_error("Axis must be 0 or 1");
+    return Tensor<T>(arma::max(this->view(), dim));
+}
+  void print() const {
+    this->view().print();
+  }
+
+//   Tensor add_vector(const Tensor& vec) {
+//     if (vec.shape[1] != this->shape[1]) 
+//         throw runtime_error("Width mismatch for broadcasting");
+//     Mat<T> result = this->view();
+//     result.each_row() += vec.x_tensor.row(0);
+    
+//     return Tensor(result);
+// }
 };
 
 int main(){
