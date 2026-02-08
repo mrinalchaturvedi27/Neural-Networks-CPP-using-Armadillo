@@ -63,6 +63,8 @@ This repository now includes comprehensive architectural analysis and implementa
 
 ### 📖 **Documentation**
 
+**Start here**: [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Navigation guide and key takeaways
+
 1. **[DYNET_COMPARISON.md](DYNET_COMPARISON.md)** - Complete architectural comparison
    - Side-by-side analysis of NeuroEngine-CPP vs DyNet
    - Detailed gap analysis for each component
