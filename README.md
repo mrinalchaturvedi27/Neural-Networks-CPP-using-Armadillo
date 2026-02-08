@@ -47,10 +47,55 @@ Tensor<float> d = a.dot(t);
 d.print();
 
 ---
+
 ## **Next After This**
 
 - **Backpropagation / Autograd**
 - **Neural Network Layers**
 - **Optimizers**
 - **CUDA (maybe later!)**
+
+---
+
+## 📚 **DyNet Comparison & Implementation Guides**
+
+This repository now includes comprehensive architectural analysis and implementation guides inspired by DyNet:
+
+### 📖 **Documentation**
+
+1. **[DYNET_COMPARISON.md](DYNET_COMPARISON.md)** - Complete architectural comparison
+   - Side-by-side analysis of NeuroEngine-CPP vs DyNet
+   - Detailed gap analysis for each component
+   - System architecture and forward pass approach differences
+   - Development roadmap with 6 phases
+   - Code examples and best practices
+   - Estimated timelines and effort
+
+2. **[IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)** - Step-by-step implementation guide
+   - Detailed instructions for Phase 2 (Computation Graph & Autograd)
+   - Complete code examples for each component
+   - Node base class and operation implementations
+   - Gradient checking and testing strategies
+   - Integration with existing Tensor code
+   - Build and compilation instructions
+
+3. **[ARCHITECTURE_DIAGRAMS.md](ARCHITECTURE_DIAGRAMS.md)** - Visual architecture guide
+   - ASCII diagrams of current vs target architecture
+   - Execution flow comparisons (eager vs graph-based)
+   - Data flow in forward/backward passes
+   - Memory management strategies
+   - Component interaction diagrams
+   - Complete roadmap visualization
+
+### 🎯 **Key Findings**
+
+**Current State**: Phase 1 (Tensor Abstraction) ✅ Complete
+
+**Critical Next Steps**:
+- Phase 2: Computation Graph & Autograd (START HERE)
+- Phase 3: Parameter Management & Training
+- Phase 4: Neural Network Layers
+
+See [DYNET_COMPARISON.md](DYNET_COMPARISON.md) for the complete analysis and roadmap.
+
 ---
