@@ -47,10 +47,47 @@ Tensor<float> d = a.dot(t);
 d.print();
 
 ---
+
+## **DyNet Comparison & Roadmap**
+
+This repository has been analyzed and compared with [DyNet](https://github.com/clab/dynet), a mature neural network toolkit from Carnegie Mellon University. Comprehensive documentation has been created:
+
+📋 **[DYNET_COMPARISON.md](DYNET_COMPARISON.md)** - Detailed architectural comparison
+- Lists all architectural gaps between this repo and DyNet
+- Compares system design and forward/backward propagation approaches
+- Identifies critical missing features (computational graphs, autograd, parameters, optimizers)
+- Provides prioritized recommendations
+
+🗺️ **[ARCHITECTURE_ROADMAP.md](ARCHITECTURE_ROADMAP.md)** - Implementation guide
+- Detailed Phase 2 implementation plan (Computational Graph & Autograd)
+- Complete code examples with forward and backward propagation
+- File organization and testing strategy
+- Week-by-week implementation checklist
+
+### Current Status
+**Phase 1 Complete**: Basic Tensor abstraction ✅  
+**Next**: Phase 2 - Computational Graph & Automatic Differentiation
+
+---
+
 ## **Next After This**
 
-- **Backpropagation / Autograd**
-- **Neural Network Layers**
-- **Optimizers**
-- **CUDA (maybe later!)**
+### Critical Foundation (Phase 2)
+- **Computational Graph** - Record operations in a DAG structure
+- **Automatic Differentiation** - Backpropagation through the graph
+- **Expression API** - User-friendly operator overloading
+
+### Training Infrastructure (Phase 3)
+- **Parameter Management** - ParameterCollection for model weights
+- **Optimizers** - SGD, Adam, RMSprop implementations
+
+### Neural Network Layers (Phase 4)
+- **Layer Abstractions** - Linear, activation functions, loss functions
+- **Model Building** - High-level API for network construction
+
+### Advanced Features (Phase 5+)
+- **Recurrent Networks** - LSTM, GRU implementations
+- **CUDA Support** - GPU acceleration
+- **Auto-batching** - DyNet's signature optimization feature
+
 ---
